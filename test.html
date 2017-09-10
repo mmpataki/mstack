@@ -1,0 +1,141 @@
+<html>
+
+<head>
+	<title>Stack..</title>
+	<link rel="stylesheet" href="styles.css"></link>
+</head>
+
+<script>
+	function g(id) { return document.getElementById(id); }
+	function toggleinputpanel() {
+		var x = g("inputpanel");
+		x.style.display = x.style.display == "none" ? "block" : "none";
+	}
+	var list, current=0, limit, cdata = [], searched=false;
+	window.onload = function () { list = g("list"); fillData(current); }
+
+	function fillData(start) {
+		http_request(
+			"http://localhost/stack/stack.php?from="+start,
+			function (data) {
+				cdata = JSON.parse(data);
+				limit = cdata.length;
+				display_data(cdata);
+			}
+		);
+	}
+	
+	function display_data(x) {
+		list.innerHTML = "";
+		for(var i=0; i<x.length; i++)
+			add_list_entry(x[i]);
+	}
+
+	function nextClicked() {
+		fillData(current += limit);
+	}
+
+	function prevClicked() {
+		if(current == 0)
+			return;
+		fillData(current -= limit);
+	}
+
+	function delete_item(x) {
+		http_request(
+			`http://localhost/stack/delete.php?id=${x.id}`,
+			function (data) {
+				if(data == "success\n") {
+					list.removeChild(x.parentNode.parentNode.parentNode);
+				}
+			}
+		)
+	}
+
+	function http_request(url, callback) {
+		var request = new XMLHttpRequest();
+		request.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				callback(request.responseText);
+			}
+		}
+		request.open("GET", url, true);
+		request.send();
+	}
+
+	function add_list_entry(x) {
+		var li = document.createElement('li');
+		li.innerHTML =
+			`<div class='outer-container fadeOutLeft'>
+			   <span class='spanline'>
+			     <span class='timestamp'>${x.timestamp}</span>
+			     <span class='deletebut' onclick='delete_item(this)' id='${x.id}' title='Delete'>&#x274c;</span>
+			   </span>
+				<p>${x.content}</p>
+			</div>`;
+		list.insertBefore(li, list.childNodes[0]);
+	}
+
+	function push() {
+		var x = {"timestamp": new Date().toUTCString(), "content": g("inputdata").value};
+		http_request(
+			"http://localhost/stack/insert.php?obj=" + JSON.stringify(x),
+			function (data) {
+				if(data != "") {
+					x.id = parseInt(data);
+					add_list_entry(x);
+				} else {
+					alert("Sorry! failed to update stack db.");
+				}
+			}
+		)
+		toggleinputpanel();
+	}
+
+	function search() {
+		http_request(
+			`http://localhost/stack/search.php?key=${g("searchbox").value}`,
+			function(data) {
+				display_data(JSON.parse(data));
+			}
+		)
+	}
+
+	function kd(e) {
+		if(e.keyCode == 13) {
+			search();
+			searched=true;
+		}
+		if(e.keyCode == 8 && g("searchbox").value.length == 1 && searched==true) {
+			display_data(cdata);
+			searched=false;
+		}
+	}
+
+</script>
+
+<body>
+
+	<div style='margin: 0px; display: block;'>
+		<h2><span>Stack...</span></h2>
+
+		<table style="width: 100%;">
+			<tr>
+				<td style='width: 80;'><a onclick="toggleinputpanel()" class="button new">New</a></td>
+				<td><input type="text" id="searchbox" onkeydown="kd(event)" placeholder="search with ENTER"/></td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="inputpanel">
+		<br/><br/>
+		<textarea maxlength="1000" id="inputdata"></textarea>
+		<a onclick="push()" class="button push">Push</a>
+		<br/>
+	</div>
+
+	<br/><br/>
+	<ul id="list"></ul>
+</body>
+
+</html>

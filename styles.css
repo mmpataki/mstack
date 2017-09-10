@@ -1,0 +1,79 @@
+body {
+	width: 50%;
+	margin: auto;
+}
+.spanline {
+	width: 100%;
+}
+.deletebut { font-size: 16; float: right; color: lightgray; }
+.deletebut:hover { cursor: pointer; color: gray; }
+h2 { margin: 20px; margin-left: -3px;}
+h2>span {
+	background: #44c767;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 3px;
+}
+table {
+	margin: 10px 0px;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+tr, td, table {
+	padding: 0px;
+}
+#searchbox {
+	outline: none;
+	border: solid 1px #44c767;
+	padding: 6px 10px;
+	width: 100%;
+	float: right;
+}
+
+#inputdata {
+	width: 100%;
+	padding: 10px;
+	border: solid 1px gray;
+	height: 150px;
+	font-size: 16;
+	margin: 20px 0px;
+	margin-bottom: 0px;
+}
+
+.button:active {
+	position: relative;
+}
+
+.button {
+	display: inline-block;
+	cursor: pointer;
+	color: #ffffff;
+	font-family: Arial;
+	font-size: 14px;
+	padding: 8px 20px;
+	margin: 0px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.new { background-color: #44c767; }
+
+ul {
+	list-style-type: none;
+	padding: 0px;
+}
+li {
+	margin: 20px 0px;
+	margin-left: 0px;
+	border: solid 1px lightgray;
+	border-left: solid 3px purple;
+	padding: 10px 20px;
+	font-family: 'Open Sans';
+}
+#inputpanel {
+	display: none;
+}
+.timestamp { color: gray; font-size: 12; font-style: italic; }
+.push { background-color: gray; float: right; }
+
+
