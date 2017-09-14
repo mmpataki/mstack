@@ -2,6 +2,7 @@ body {
 	width: 50%;
 	margin: auto;
 }
+.found { background: lightgray; border-radius: 2px; font-style: italic; padding: 2px; }
 .spanline {
 	width: 100%;
 }
@@ -69,6 +70,7 @@ li {
 	border-left: solid 3px purple;
 	padding: 10px 20px;
 	font-family: 'Open Sans';
+	/*border-radius: 4px;*/
 }
 #inputpanel {
 	display: none;

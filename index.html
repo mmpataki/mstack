@@ -93,10 +93,14 @@
 	}
 
 	function search() {
+		var searchq = g("searchbox").value;
 		http_request(
-			`http://localhost/stack/search.php?key=${g("searchbox").value}`,
+			`http://localhost/stack/search.php?key=${searchq}`,
 			function(data) {
-				display_data(JSON.parse(data));
+				var json = JSON.parse(data);
+				for(var i=0; i<json.length; i++)
+					json[i].content = json[i].content.replace(new RegExp(searchq, 'gi'), `<span class='found'>${searchq}</span>`);
+				display_data(json);
 			}
 		)
 	}
@@ -106,7 +110,7 @@
 			search();
 			searched=true;
 		}
-		if(e.keyCode == 8 && g("searchbox").value.length == 1 && searched==true) {
+		if(e.keyCode == 8 && g("searchbox").value.length == 0 && searched==true) {
 			display_data(cdata);
 			searched=false;
 		}
@@ -122,7 +126,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style='width: 80;'><a onclick="toggleinputpanel()" class="button new">New</a></td>
-				<td><input type="text" id="searchbox" onkeydown="kd(event)" placeholder="search with ENTER"/></td>
+				<td><input type="text" id="searchbox" onkeyup="kd(event)" placeholder="search with ENTER"/></td>
 			</tr>
 		</table>
 	</div>
